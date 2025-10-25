@@ -1,0 +1,35 @@
+# Atualizado 25/10 - versão final online
+name: Build Docs and Export PDF (Online)
+
+on:
+  workflow_dispatch:
+
+jobs:
+  generate-online-pdf:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📥 Clonar repositório
+        uses: actions/checkout@v4
+
+      - name: ⚙️ Instalar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: 🧰 Instalar dependências do sistema
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y poppler-utils
+
+      - name: 📦 Instalar Puppeteer
+        run: npm install puppeteer
+
+      - name: 🧾 Gerar PDF diretamente do site docs.n8n.io
+        run: node scripts/generate-pdf.js
+
+      - name: 📤 Upload do PDF final
+        uses: actions/upload-artifact@v4
+        with:
+          name: compiled-n8n-docs
+          path: Compiled-n8n-Docs.pdf
